@@ -32,16 +32,19 @@ public class UserRegistrationController {
 	@Autowired
 	private UserRegistrationService userRegistrationService;
 	
-	@RequestMapping(value = {
-	"/users" }, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-	public void createNewUser(@RequestBody UserIn user) throws OutsideHttpException {
-		internalCreateNewUser(user);
+	@RequestMapping(value = { "/users" }, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public UserIn createNewUser(@RequestBody UserIn user) throws OutsideHttpException {
+		return internalCreateNewUser(user);
+
 	}
 
-	private void internalCreateNewUser(UserIn user) throws OutsideHttpException {
+	private UserIn internalCreateNewUser(UserIn user) throws OutsideHttpException {
 		try {
-			userRegistrationService.saveNewUser(user);
+			UserIn createdUser = userRegistrationService.saveNewUser(user);
+			if(user != null) {
+				return createdUser;
+			}
 		} 
 		catch(UserValidationException e) {
 			LOGGER.error("Error while validating new user: " + e.getMessage());
@@ -51,6 +54,7 @@ public class UserRegistrationController {
 			LOGGER.error("Error while creating new user: " + e.getMessage());
 			throw new OutsideHttpException(e.getMessage(), e);
 		}
+		return null;
 		
 	}
 	

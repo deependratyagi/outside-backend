@@ -3,12 +3,31 @@
  */
 package com.outside.backend.user;
 
+import java.util.UUID;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+import org.hibernate.annotations.GenericGenerator;
+
 /**
  * @author dtyai
  *
  */
+@Entity
 public class UserIn {
 
+	@Id
+	@GenericGenerator(strategy="uuid2", name="userid")
+	@GeneratedValue(generator="userid")
+	private UUID userId;
+	public UUID getUserId() {
+		return userId;
+	}
+	public void setUserId(UUID userId) {
+		this.userId = userId;
+	}
 	private String firstName;
 	private String phoneNumber;
 	private String emailAddress;

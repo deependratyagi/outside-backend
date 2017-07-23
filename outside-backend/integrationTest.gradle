@@ -1,0 +1,24 @@
+sourceSets {
+  integrationTest {
+    java.srcDir file('src/integrationTest/java')
+
+    compileClasspath = sourceSets.main.output + configurations.testRuntime
+    runtimeClasspath = output + compileClasspath
+
+    resources.srcDir file('src/integrationTest/resources')
+  }
+}
+
+task integrationTest(type: Test, dependsOn: integrationTestClasses) {
+  description = 'Runs the integration tests.'
+  group = 'verification'
+  testLogging.showStandardStreams = true
+
+  testClassesDir = sourceSets.integrationTest.output.classesDir
+  classpath = sourceSets.integrationTest.runtimeClasspath
+  
+  reports.junitXml.destination = file("$reports.junitXml.destination/integration")
+
+}
+
+check.dependsOn integrationTest
